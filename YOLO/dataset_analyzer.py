@@ -4,8 +4,11 @@ import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 
+
+from pathlib import Path
 # Configuration
-SOURCE_DATA_DIR = Path("/home/uvi/kids_face_recognition/filtered_datasets")
+repo_root = Path(__file__).resolve().parents[2]
+SOURCE_DATA_DIR = repo_root / "kids_face_recognition" / "filtered_datasets"
 
 def analyze_dataset_dimensions():
     """

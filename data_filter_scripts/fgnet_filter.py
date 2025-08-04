@@ -1,7 +1,9 @@
+
 import os
 import deeplake
 from PIL import Image
 from tqdm import tqdm
+from pathlib import Path
 
 def save_images_from_deeplake(save_path):
     """
@@ -86,6 +88,6 @@ def save_images_from_deeplake(save_path):
 
 
 if __name__ == "__main__":
-    # The output directory is set to your specified path.
-    output_directory = "/home/uvi/kids_face_recognition/filtered_datasets/FGNET_age_0_12"
-    save_images_from_deeplake(save_path=output_directory)
+    repo_root = Path(__file__).resolve().parents[2]
+    output_directory = repo_root / "kids_face_recognition" / "filtered_datasets" / "FGNET_age_0_12"
+    save_images_from_deeplake(save_path=str(output_directory))

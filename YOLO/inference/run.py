@@ -1,26 +1,30 @@
+
 import ultralytics
 import os
 import cv2
 import numpy as np
 from ultralytics import YOLO
+from pathlib import Path
 
-MODEL_PATH = '/home/uvi/kids_face_recognition/models/yolov12l-face.pt'
-#MODEL_PATH = '/home/uvi/kids_face_recognition/YOLO/runs/detect/yolov12l_100ep_352imgsize/weights/best.pt'
-#MODEL_PATH = '/home/uvi/kids_face_recognition/YOLO/runs/detect/yolov12l_10ep_352imgsize/weights/last.pt'
+repo_root = Path(__file__).resolve().parents[3]
+MODEL_PATH = repo_root / "kids_face_recognition" / "models" / "yolov12l-face.pt"
+#MODEL_PATH = repo_root / "kids_face_recognition" / "YOLO" / "runs" / "detect" / "yolov12l_100ep_352imgsize" / "weights" / "best.pt"
+#MODEL_PATH = repo_root / "kids_face_recognition" / "YOLO" / "runs" / "detect" / "yolov12l_10ep_352imgsize" / "weights" / "last.pt"
 
-SOURCE_VIDEO = '/home/uvi/kids_face_recognition/YOLO/inference/input_video.mp4'
-OUTPUT_PROJECT_DIR = '/home/uvi/kids_face_recognition/YOLO/inference'
+SOURCE_VIDEO = repo_root / "kids_face_recognition" / "YOLO" / "inference" / "input_video.mp4"
+OUTPUT_PROJECT_DIR = repo_root / "kids_face_recognition" / "YOLO" / "inference"
 OUTPUT_RUN_NAME = 'output'
 
-if not os.path.exists(MODEL_PATH):
+
+if not MODEL_PATH.exists():
     print(f"Model file not found at '{MODEL_PATH}'.")
     print("Please ensure you have downloaded the correct model file and placed it in the correct directory.")
     exit()
 
-if not os.path.exists(SOURCE_VIDEO):
+if not SOURCE_VIDEO.exists():
     print(f"Input source video file do not exist.")
-    
-model = YOLO(MODEL_PATH)
+
+model = YOLO(str(MODEL_PATH))
 print(f"Processing video: {SOURCE_VIDEO}")
 print(f"Using model: {MODEL_PATH}")
 
@@ -34,11 +38,11 @@ To find more, hard-to-detect faces: Keep the threshold low, but combine this wit
 IoU Threshold (iou): This threshold is used for Non-Maximum Suppression (NMS), which merges multiple overlapping boxes for the same object. The default is 0.7. If you find you're getting several boxes on a single face, you can lower this value.
 """
 # Run tracking on the video
-results = model.track( # <-- CHANGE HERE
-    source=SOURCE_VIDEO,
+results = model.track(
+    source=str(SOURCE_VIDEO),
     stream=True,
     save=True,
-    project=OUTPUT_PROJECT_DIR,
+    project=str(OUTPUT_PROJECT_DIR),
     name=OUTPUT_RUN_NAME,
     exist_ok=True,
     conf=CONFIDENCE_THRESHOLD,
@@ -50,4 +54,4 @@ for r in results:
         
 print("---------------------------------")
 print(f"Processing complete!")
-print(f"Output video saved in: {os.path.join(OUTPUT_PROJECT_DIR, OUTPUT_RUN_NAME)}")
+print(f"Output video saved in: {OUTPUT_PROJECT_DIR / OUTPUT_RUN_NAME}")

@@ -5,11 +5,14 @@ import random
 import shutil
 from pathlib import Path
 
+
+from pathlib import Path
 # Configuration
-SOURCE_DATA_DIR = Path("/home/uvi/kids_face_recognition/filtered_datasets")
-OUTPUT_DATA_DIR = Path("/home/uvi/kids_face_recognition/YOLO/yolo_dataset")
-PROTOTXT_PATH = Path("/home/uvi/kids_face_recognition/filtered_datasets/face_model/deploy.prototxt")
-MODEL_PATH = Path("/home/uvi/kids_face_recognition/filtered_datasets/face_model/res10_300x300_ssd_iter_140000.caffemodel")
+repo_root = Path(__file__).resolve().parents[2]
+SOURCE_DATA_DIR = repo_root / "kids_face_recognition" / "filtered_datasets"
+OUTPUT_DATA_DIR = repo_root / "kids_face_recognition" / "YOLO" / "yolo_dataset"
+PROTOTXT_PATH = repo_root / "kids_face_recognition" / "filtered_datasets" / "face_model" / "deploy.prototxt"
+MODEL_PATH = repo_root / "kids_face_recognition" / "filtered_datasets" / "face_model" / "res10_300x300_ssd_iter_140000.caffemodel"
 VALIDATION_SPLIT = 0.2
 CLASS_ID = 0
 

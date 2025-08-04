@@ -1,10 +1,11 @@
 
+
 from ultralytics import YOLO
 from pathlib import Path
-
 # Configuration
-MODEL_PATH = Path("/home/uvi/kids_face_recognition/models/yolov12l-face.pt")
-DATASET_YAML_PATH = Path("/home/uvi/kids_face_recognition/YOLO/dataset.yaml")
+repo_root = Path(__file__).resolve().parents[2]
+MODEL_PATH = repo_root / "kids_face_recognition" / "models" / "yolov12l-face.pt"
+DATASET_YAML_PATH = repo_root / "kids_face_recognition" / "YOLO" / "dataset.yaml"
 EPOCHS = 10
 BATCH_SIZE = 16
 IMAGE_SIZE = 352
