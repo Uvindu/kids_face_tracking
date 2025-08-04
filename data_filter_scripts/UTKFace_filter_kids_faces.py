@@ -3,8 +3,8 @@ import os
 import shutil
 
 # Configuration
-SOURCE_IMAGE_DIR = '/home/uvi/kids_face_recognition/UTKFace'
-DESTINATION_DIR = 'filtered_malaysian_kids_0_to_12'
+SOURCE_IMAGE_DIR = '/home/uvi/kids_face_recognition/raw_datasets/UTKFace'
+DESTINATION_DIR = '/home/uvi/kids_face_recognition/filtered_datasets/filtered_malaysian_kids_0_to_12'
 MIN_AGE = 0
 MAX_AGE = 12
 RACE_CODES_TO_INCLUDE = [2, 3]  # 2: Asian (Malay/Chinese), 3: Indian

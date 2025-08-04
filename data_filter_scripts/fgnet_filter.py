@@ -16,19 +16,15 @@ def save_images_from_deeplake(save_path):
     print("Attempting to load FGNET dataset from Activeloop Hub...")
     
     try:
-        # Print the deeplake version to help with debugging
         print(f"Deep Lake version: {deeplake.__version__}")
 
         # Using deeplake.load with read_only=True, which is the
         # correct syntax for deeplake v3.x.
         ds = deeplake.load("hub://activeloop/fgnet", read_only=True)
 
-        # For deeplake v3, the class names are in the .info dictionary.
-        # We get these lookup tables once before the loop for efficiency.
         subject_id_names = ds.image_ids.info['class_names']
         age_names = ds.ages.info['class_names']
 
-        # Create the target directory if it doesn't exist
         if not os.path.exists(save_path):
             os.makedirs(save_path)
             print(f"Created directory: {save_path}")
@@ -43,16 +39,12 @@ def save_images_from_deeplake(save_path):
         filtered_out_count = 0
         for i, sample in enumerate(tqdm(ds, desc="Processing images")):
             try:
-                # Get the age and convert it to an integer for filtering
                 age_index = sample['ages'].numpy()[0]
                 age = int(age_names[age_index])
 
                 # --- Filter by age ---
                 if 0 <= age <= 12:
-                    # Access the image tensor using its correct name 'images'
                     image_array = sample['images'].numpy()
-
-                    # --- Reconstruct the filename from the dataset's structured data ---
                     
                     # 1. Get the subject ID string via index lookup
                     subject_id_index = sample['image_ids'].numpy()[0]
