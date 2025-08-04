@@ -1,40 +1,24 @@
+
 import os
 import cv2
 import random
 import shutil
 from pathlib import Path
 
-# --- Configuration ---
-
-# Path to the directory containing your source image folders.
+# Configuration
 SOURCE_DATA_DIR = Path("/home/uvi/kids_face_recognition/filtered_datasets")
-
-# Path where the final, structured YOLO dataset will be created.
-# This is now inside your YOLO folder.
 OUTPUT_DATA_DIR = Path("/home/uvi/kids_face_recognition/YOLO/yolo_dataset")
-
-# Path to the face detection model files.
-# --- UPDATED FILENAME ---
-# The script now looks for 'deploy.prototxt' directly.
 PROTOTXT_PATH = Path("/home/uvi/kids_face_recognition/filtered_datasets/face_model/deploy.prototxt")
 MODEL_PATH = Path("/home/uvi/kids_face_recognition/filtered_datasets/face_model/res10_300x300_ssd_iter_140000.caffemodel")
-
-# Defines the ratio for the validation set (e.g., 0.2 = 20%).
 VALIDATION_SPLIT = 0.2
-
-# The class ID for your object. It's 0 since you only have one class ('kid_face').
 CLASS_ID = 0
-
-# --- Main Script Logic ---
 
 def create_yolo_dataset():
     """
-    Main function to process images, create annotations, and structure the
-    dataset for YOLO training.
+    Processes images, creates annotations, and structures the dataset for YOLO training.
     """
     print("--- Starting Dataset Preparation ---")
 
-    # Load the pre-trained face detection model from disk
     print(f"[INFO] Loading face detector model...")
     try:
         face_detector = cv2.dnn.readNetFromCaffe(str(PROTOTXT_PATH), str(MODEL_PATH))
@@ -44,9 +28,8 @@ def create_yolo_dataset():
         print(f"  - Model Path: {MODEL_PATH}")
         return
 
-    # --- 1. Collect all image paths from the source directories ---
     all_image_paths = list(SOURCE_DATA_DIR.glob("**/*.jpg"))
-    random.shuffle(all_image_paths) # Shuffle to ensure random distribution
+    random.shuffle(all_image_paths)  # Shuffle for random distribution
     
     if not all_image_paths:
         print(f"[ERROR] No images found in {SOURCE_DATA_DIR}. Please check the path.")
@@ -54,7 +37,6 @@ def create_yolo_dataset():
 
     print(f"[INFO] Found {len(all_image_paths)} total images.")
 
-    # --- 2. Create the output directory structure ---
     print(f"[INFO] Creating output directory structure at: {OUTPUT_DATA_DIR}")
     path_images_train = OUTPUT_DATA_DIR / "images/train"
     path_images_val = OUTPUT_DATA_DIR / "images/val"
@@ -64,15 +46,14 @@ def create_yolo_dataset():
     for p in [path_images_train, path_images_val, path_labels_train, path_labels_val]:
         p.mkdir(parents=True, exist_ok=True)
 
-    # --- 3. Split the dataset ---
+    # Split the dataset
     split_index = int(len(all_image_paths) * (1 - VALIDATION_SPLIT))
     train_paths = all_image_paths[:split_index]
     val_paths = all_image_paths[split_index:]
 
     print(f"[INFO] Splitting dataset: {len(train_paths)} training images, {len(val_paths)} validation images.")
 
-    # --- 4. Process images and create annotations ---
-    # This list will store details of all skipped files for the final report.
+    # Process images and create annotations
     skipped_files_log = []
     
     process_split(train_paths, path_images_train, path_labels_train, face_detector, "Training", skipped_files_log)
@@ -81,7 +62,7 @@ def create_yolo_dataset():
     print("\n--- Dataset Preparation Complete! ---")
     print(f"Your YOLO-ready dataset is located at: {OUTPUT_DATA_DIR}")
 
-    # --- 5. Print a detailed report of all skipped files ---
+    # Print a detailed report of all skipped files
     if skipped_files_log:
         print("\n--- Skipped Files Report ---")
         print(f"A total of {len(skipped_files_log)} images were skipped.")
@@ -93,9 +74,7 @@ def create_yolo_dataset():
 
 def process_split(image_paths, img_output_dir, label_output_dir, face_detector, split_name, skipped_files_log):
     """
-    Processes a list of images for a given split (train/val).
-    Detects faces, creates YOLO annotations, and saves the files.
-    Logs any skipped files to the provided log list.
+    Processes images for a given split, detects faces, creates YOLO annotations, and logs skipped files.
     """
     print(f"\n[INFO] Processing {split_name} set...")
     images_processed = 0
@@ -137,12 +116,9 @@ def process_split(image_paths, img_output_dir, label_output_dir, face_detector, 
                 cv2.imwrite(str(output_img_path), image)
                 with open(output_label_path, "w") as f:
                     f.write(yolo_annotation)
-                
                 images_processed += 1
             else:
                 reason = f"Low face detection confidence: {confidence:.2f} (threshold > 0.5)"
-                # This warning is optional as it will be in the final report
-                # print(f"  [INFO] Skipping {img_path.name}: {reason}")
                 skipped_files_log.append((str(img_path), reason))
                 images_skipped_in_split += 1
 

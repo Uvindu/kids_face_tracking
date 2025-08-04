@@ -1,24 +1,19 @@
+
 import cv2
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 
-# --- Configuration ---
-
-# Set the path to your source dataset containing the original image folders.
-# This should be the same source directory as your data preparation script.
+# Configuration
 SOURCE_DATA_DIR = Path("/home/uvi/kids_face_recognition/filtered_datasets")
-
-# --- Main Analysis Logic ---
 
 def analyze_dataset_dimensions():
     """
-    Analyzes all images in the source directory to find their
-    average and median dimensions.
+    Analyzes all images in the source directory to find their average and median dimensions.
     """
     print("--- Starting Dataset Size Analysis ---")
 
-    # --- 1. Collect all image paths from the source directories ---
+    # Collect all image paths from the source directories
     all_image_paths = list(SOURCE_DATA_DIR.glob("**/*.jpg"))
     
     if not all_image_paths:
@@ -27,15 +22,14 @@ def analyze_dataset_dimensions():
 
     print(f"[INFO] Found {len(all_image_paths)} total images to analyze.")
 
-    # --- 2. Iterate through images and collect their dimensions ---
+    # Iterate through images and collect their dimensions
     widths = []
     heights = []
 
-    # Using tqdm for a nice progress bar
+    # Use tqdm for progress bar
     for img_path in tqdm(all_image_paths, desc="Analyzing images"):
         try:
-            # Read image headers to get dimensions without loading the full image
-            # This is faster than cv2.imread()
+            # Read image headers to get dimensions
             image = cv2.imread(str(img_path))
             if image is not None:
                 h, w = image.shape[:2]
@@ -48,7 +42,7 @@ def analyze_dataset_dimensions():
         print("[ERROR] Could not read dimensions from any images.")
         return
 
-    # --- 3. Calculate statistics ---
+    # Calculate statistics
     avg_width = int(np.mean(widths))
     avg_height = int(np.mean(heights))
     
@@ -62,7 +56,7 @@ def analyze_dataset_dimensions():
     max_height = int(np.max(heights))
 
 
-    # --- 4. Print the final report ---
+    # Print the final report
     print("\n--- Dataset Size Analysis Report ---")
     print(f"Total images analyzed: {len(widths)}")
     print("\n--- Averages ---")
@@ -82,6 +76,4 @@ def analyze_dataset_dimensions():
 
 
 if __name__ == "__main__":
-    # Ensure you have numpy and tqdm installed:
-    # pip3 install numpy tqdm
     analyze_dataset_dimensions()

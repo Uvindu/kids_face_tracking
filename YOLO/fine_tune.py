@@ -1,20 +1,13 @@
+
 from ultralytics import YOLO
 from pathlib import Path
 
-# --- Configuration ---
-
-# Path to the pre-trained model you want to fine-tune.
+# Configuration
 MODEL_PATH = Path("/home/uvi/kids_face_recognition/models/yolov12l-face.pt")
-
-# Path to your dataset configuration file.
 DATASET_YAML_PATH = Path("/home/uvi/kids_face_recognition/YOLO/dataset.yaml")
-
-# Training parameters.
 EPOCHS = 100
 BATCH_SIZE = 16
 IMAGE_SIZE = 352
-
-# --- Main Training Logic ---
 
 def train_model():
     """
