@@ -1,0 +1,13 @@
+# Save this content as 'dataset.yaml' in your '/home/uvi/kids_face_recognition/' directory.
+
+# Path to the root directory of your prepared dataset.
+path: /home/uvi/kids_face_recognition/YOLO/yolo_dataset
+
+# Paths to the train and validation image folders (relative to 'path').
+train: images/train
+val: images/val
+
+# --- Class Names ---
+# A mapping of class IDs to names.
+names:
+  0: kid_face
